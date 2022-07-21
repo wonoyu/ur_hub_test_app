@@ -20,5 +20,51 @@ class ProductCartBloc extends Bloc<ProductCartEvent, ProductCartState> {
       }
       emit(ProductCartAdded(product: productsAdded));
     });
+
+    on<RemoveFromCart>((event, emit) {
+      final product = event.product;
+      final productsAdded = event.productsAdded;
+      productsAdded.remove(product);
+      if (productsAdded.isEmpty) {
+        emit(ProductCartInitial());
+      } else {
+        emit(ProductCartLoading());
+        emit(ProductCartAdded(product: productsAdded));
+      }
+    });
+    on<RemoveQuantity>((event, emit) {
+      final product = event.product;
+      final productsAdded = event.productsAdded;
+      if (productsAdded.any((element) => element.name == product.name)) {
+        int quantity = productsAdded[productsAdded
+                .indexWhere((element) => element.name == product.name)]
+            .quantity;
+        if (quantity > 1) {
+          productsAdded[productsAdded
+                  .indexWhere((element) => element.name == product.name)]
+              .quantity -= 1;
+        } else {
+          productsAdded.remove(product);
+        }
+      }
+      if (productsAdded.isEmpty) {
+        emit(ProductCartInitial());
+      } else {
+        emit(ProductCartLoading());
+        emit(ProductCartAdded(product: productsAdded));
+      }
+    });
+
+    on<AddQuantity>((event, emit) {
+      final product = event.product;
+      final productsAdded = event.productsAdded;
+      if (productsAdded.any((element) => element.name == product.name)) {
+        productsAdded[productsAdded
+                .indexWhere((element) => element.name == product.name)]
+            .quantity += 1;
+        emit(ProductCartLoading());
+        emit(ProductCartAdded(product: productsAdded));
+      }
+    });
   }
 }

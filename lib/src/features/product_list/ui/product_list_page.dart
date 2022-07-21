@@ -21,7 +21,7 @@ class ProductListPage extends StatelessWidget {
           final products = state.products;
           final categories = state.categories;
           final filtered = state.filteredProducts;
-          print(filtered.length);
+
           return ProductListView(
             products: products,
             categories: categories.toList(),

@@ -39,36 +39,42 @@ class ProductDetailPage extends StatelessWidget {
           )
         ],
       ),
-      body: Column(
-        children: [
-          CarouselImages(images: product.images),
-          Text(
-            product.name,
-            style: Theme.of(context).textTheme.headline6,
-          ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(32.0, 8.0, 24.0, 8.0),
-            child: Text(product.description),
-          ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(32.0, 8.0, 24.0, 8.0),
-            child: Text("Harga : Rp. ${product.price}"),
-          ),
-          BlocBuilder<ProductCartBloc, ProductCartState>(
-            builder: (context, state) {
-              final productsAdded =
-                  state is ProductCartAdded ? state.product : <Product>[];
-              return ElevatedButton(
-                  onPressed: () {
-                    print("ini terpanggil ah");
-                    context
-                        .read<ProductCartBloc>()
-                        .add(AddToCart(product, productsAdded));
-                  },
-                  child: const Text("Tambah Ke Keranjang"));
-            },
-          )
-        ],
+      body: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        child: Column(
+          children: [
+            CarouselImages(images: product.images),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(32.0, 8.0, 24.0, 8.0),
+              child: Text(
+                product.name,
+                style: Theme.of(context).textTheme.headline6,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(32.0, 8.0, 24.0, 8.0),
+              child: Text(product.description),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(32.0, 8.0, 24.0, 8.0),
+              child: Text("Harga : Rp. ${product.price}"),
+            ),
+            BlocBuilder<ProductCartBloc, ProductCartState>(
+              builder: (context, state) {
+                final productsAdded =
+                    state is ProductCartAdded ? state.product : <Product>[];
+                return ElevatedButton(
+                    onPressed: () {
+                      context
+                          .read<ProductCartBloc>()
+                          .add(AddToCart(product, productsAdded));
+                    },
+                    child: Text(
+                        "Tambah Ke Keranjang (Qty ${productsAdded.any((element) => element == product) ? product.quantity : 0})"));
+              },
+            )
+          ],
+        ),
       ),
     );
   }

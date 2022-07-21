@@ -125,7 +125,9 @@ class ListViewContent extends StatelessWidget {
                 height: 150,
                 imageUrl: product.images[0],
                 progressIndicatorBuilder: (context, url, downloadProgress) =>
-                    CircularProgressIndicator(value: downloadProgress.progress),
+                    Center(
+                        child: CircularProgressIndicator(
+                            value: downloadProgress.progress)),
                 errorWidget: (context, url, error) => const Icon(
                   Icons.error,
                   size: 100,

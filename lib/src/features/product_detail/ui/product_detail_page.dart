@@ -2,7 +2,10 @@ import 'package:badges/badges.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ur_hub_test_app/src/features/product_cart/bloc/product_cart_bloc.dart';
 import 'package:ur_hub_test_app/src/features/product_list/entities/product_list_model.dart';
+import 'package:ur_hub_test_app/src/shared/routes.dart';
 
 class ProductDetailPage extends StatelessWidget {
   const ProductDetailPage({Key? key, required this.product}) : super(key: key);
@@ -17,9 +20,18 @@ class ProductDetailPage extends StatelessWidget {
         actions: [
           Badge(
             position: BadgePosition.topStart(),
-            badgeContent: const Text("3"),
+            badgeContent: BlocBuilder<ProductCartBloc, ProductCartState>(
+              builder: (context, state) {
+                if (state is ProductCartAdded) {
+                  return Text("${state.product.length}");
+                }
+                return const Text("0");
+              },
+            ),
             child: GestureDetector(
-                onTap: () {},
+                onTap: () {
+                  Navigator.pushNamed(context, AppRoutes.productCartPage);
+                },
                 child: const Padding(
                   padding: EdgeInsets.only(right: 8.0),
                   child: Icon(Icons.shopping_cart_outlined),
@@ -42,8 +54,20 @@ class ProductDetailPage extends StatelessWidget {
             padding: const EdgeInsets.fromLTRB(32.0, 8.0, 24.0, 8.0),
             child: Text("Harga : Rp. ${product.price}"),
           ),
-          ElevatedButton(
-              onPressed: () {}, child: const Text("Tambah Ke Keranjang"))
+          BlocBuilder<ProductCartBloc, ProductCartState>(
+            builder: (context, state) {
+              final productsAdded =
+                  state is ProductCartAdded ? state.product : <Product>[];
+              return ElevatedButton(
+                  onPressed: () {
+                    print("ini terpanggil ah");
+                    context
+                        .read<ProductCartBloc>()
+                        .add(AddToCart(product, productsAdded));
+                  },
+                  child: const Text("Tambah Ke Keranjang"));
+            },
+          )
         ],
       ),
     );

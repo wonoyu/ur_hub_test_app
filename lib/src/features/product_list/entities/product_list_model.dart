@@ -104,6 +104,7 @@ class Product extends Equatable {
     required this.mvName,
     required this.variantGroups,
     required this.images,
+    required this.quantity,
   });
 
   String id;
@@ -166,6 +167,7 @@ class Product extends Equatable {
   String mvName;
   List<dynamic> variantGroups;
   List<String> images;
+  int quantity;
 
   factory Product.fromMap(Map<String, dynamic> json) => Product(
         id: json["id"],
@@ -230,6 +232,7 @@ class Product extends Equatable {
             ? []
             : List<dynamic>.from(json["variant_groups"].map((x) => x)),
         images: List<String>.from(json["images"].map((x) => x)),
+        quantity: 1,
       );
 
   Map<String, dynamic> toMap() => {
@@ -357,5 +360,6 @@ class Product extends Equatable {
         mvName,
         variantGroups,
         images,
+        quantity
       ];
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:ur_hub_test_app/src/features/product_detail/ui/product_detail_page.dart';
+import 'package:ur_hub_test_app/src/features/product_cart/bloc/product_cart_bloc.dart';
 import 'package:ur_hub_test_app/src/features/product_list/bloc/product_list_bloc.dart';
 import 'package:ur_hub_test_app/src/features/product_list/repository/product_list_repository_impl.dart';
 import 'package:http/http.dart' as http;
@@ -26,7 +26,8 @@ class MyApp extends StatelessWidget {
               create: (context) => ProductListBloc(
                   productListRepositoryImpl:
                       context.read<ProductListRepositoryImpl>())
-                ..add(LoadProductList()))
+                ..add(LoadProductList())),
+          BlocProvider(create: (context) => ProductCartBloc()),
         ],
         child: MaterialApp(
           title: 'UR Hub Test',

@@ -12,12 +12,16 @@ class ProductListBloc extends Bloc<ProductListEvent, ProductListState> {
       : super(ProductListInitial()) {
     on<LoadProductList>((event, emit) async {
       emit(ProductListInitial());
-      print("kepanggil euy");
+
       try {
         final data = await productListRepositoryImpl.getProducts();
         final categories = data.map((el) => el.category).toSet().toList();
+        final filteredFirst =
+            data.where((el) => el.category == categories.first).toList();
         emit(ProductListLoaded(
-            filteredProducts: data, products: data, categories: categories));
+            filteredProducts: filteredFirst,
+            products: data,
+            categories: categories));
       } on Exception catch (e) {
         emit(ProductListError(error: e.toString()));
       }
